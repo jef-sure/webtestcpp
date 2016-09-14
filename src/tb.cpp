@@ -31,7 +31,7 @@ void test_buffer(const string &buffer) {
 
 int main() {
 	test_buffer(
-			"GET /recv.php?u=20bb9c026e&l=http%3A%2F%2Fredis.io%2Ftopics%2Fdata-types-intro%23strings&r=http%3A%2F%2Fredis.io%2F&w=1600&h=900&a=Mozilla%2F5.0%20(Windows%20NT%206.1%3B%20WOW64%3B%20rv%3A48.0)%20Gecko%2F20100101%20Firefox%2F48.0&c=y&hl=2&nv=0&rv=1 HTTP/1.1\r\n"
+			"GET /recv%3A+%3A.php?u=20bb9c026e&l=http%3A%2F%2Fredis.io%2Ftopics%2Fdata-types-intro%23strings&r=http%3A%2F%2Fredis.io%2F&w=1600&h=900&a=Mozilla%2F5.0+(Windows+NT%206.1%3B%20WOW64%3B%20rv%3A48.0)+Gecko%2F20100101%20Firefox%2F48.0&c=y&hl=2&nv=0&rv=1 HTTP/1.1\r\n"
 					"Host: demo.lloogg.com\r\n"
 					"User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0\r\n"
 					"Accept: */*\r\n"

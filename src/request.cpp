@@ -18,7 +18,7 @@ using namespace boost::algorithm;
 using namespace boost;
 
 void Request::parseMethod(size_t eolp) {
-	string method_line = string(internal_buffer, 0, eolp);
+	string method_line(internal_buffer, 0, eolp);
 	internal_buffer.erase(0, eolp + 2);
 	auto sp = method_line.find(' ');
 	if (sp == string::npos || sp == 0) {
@@ -32,7 +32,7 @@ void Request::parseMethod(size_t eolp) {
 		return;
 	}
 	url = string(method_line, sp + 1, su - sp - 1);
-	http_version = string(method_line, su + 1, method_line.size());
+	http_version = method_line.substr(su + 1);
 	replace_first(http_version, "HTTP/", "");
 	auto qp = url.find('?');
 	if (qp != string::npos) {
@@ -47,7 +47,7 @@ void Request::parseMethod(size_t eolp) {
 }
 
 void Request::parseHeaders(size_t eolp) {
-	string headers_buffer = string(internal_buffer, 0, eolp);
+	string headers_buffer(internal_buffer, 0, eolp);
 	internal_buffer.erase(0, eolp + 4);
 	string key;
 	size_t lb = 0;
@@ -69,7 +69,7 @@ void Request::parseHeaders(size_t eolp) {
 			while (lb < sp && isspace(headers_buffer[lb]))
 				++lb;
 			if (lb != sp) {
-				string hline = string(headers_buffer, lb, sp - lb);
+				string hline(headers_buffer, lb, sp - lb);
 				auto cs = hline.find(':');
 				if (cs == string::npos) {
 					current_state = BROKEN;
@@ -79,7 +79,7 @@ void Request::parseHeaders(size_t eolp) {
 				++cs;
 				while (cs < hline.size() && isspace(hline[cs]))
 					++cs;
-				headers[key] = string(hline, cs, hline.size());
+				headers[key] = hline.substr(cs);
 			}
 		}
 		if (sp == headers_buffer.size())
@@ -92,7 +92,7 @@ void Request::parseHeaders(size_t eolp) {
 	current_state = WAIT_FOR_BODY;
 }
 
-static uint8_t hex2dec(char c) {
+static uint8_t hex2val(char c) {
 	c &= ~32;
 	if (c < 32)
 		return c - 16;
@@ -100,14 +100,12 @@ static uint8_t hex2dec(char c) {
 }
 
 static char hex2char(char h1, char h0) {
-	return (hex2dec(h1) << 4) | hex2dec(h0);
+	return (hex2val(h1) << 4) | hex2val(h0);
 }
 
 static bool is_hex(char c) {
-	if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')
-			|| (c >= 'a' && c <= 'f'))
-		return true;
-	return false;
+	return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')
+			|| (c >= 'a' && c <= 'f');
 }
 
 static size_t find_escaped(const string &str, size_t spos) {
@@ -140,9 +138,10 @@ string Request::URIunescape(const string &str) {
 
 string Request::URIdecode(const string &str) {
 	string ret(str);
-	for_each(ret.begin(), ret.end(), [](char &c) {
-		if(c == '+') c = ' ';
-	});
+	for (char &c : ret) {
+		if (c == '+')
+			c = ' ';
+	};
 	return URIunescape(ret);
 }
 
