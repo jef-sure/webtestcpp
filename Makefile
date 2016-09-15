@@ -6,7 +6,7 @@ SRCDIR = src
 OBJS := $(subst .cpp,.o,$(subst $(SRCDIR),$(TMPDIR),$(shell find $(SRCDIR) -name '*.cpp')))
 
 
-LIBS =
+LIBS = -lboost_system -lboost_thread -lboost_timer
 
 TARGET =	$(BINDIR)/webtestcpp
 
@@ -19,7 +19,6 @@ $(TMPDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) -MM $(CXXFLAGS) $< | sed 's/^\([^ \t]\+\):/$(TMPDIR)\/\1:/' > $(TMPDIR)/$*.d
 	
 $(TARGET):	$(OBJS)
-	@echo $(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS)
 
 all:	$(TARGET)
