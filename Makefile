@@ -16,7 +16,7 @@ TARGET =	$(BINDIR)/webtestcpp
 
 $(TMPDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
-	$(CXX) -MM $(CXXFLAGS) $< | sed 's/^\([^ \t]\+\):/$(TMPDIR)\/\1:/' > $(TMPDIR)/$*.d
+	$(CXX) -MM $(CXXFLAGS) $< | sed 's|^\([^ \t]\+\):|$(TMPDIR)\/\1:|' > $(TMPDIR)/$*.d
 	
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS)
