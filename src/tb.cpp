@@ -10,7 +10,7 @@
 
 #include "request.h"
 
-void dump_map(const stringMap & map) {
+void dump_map(const Request::stringMap & map) {
 	for (auto it = map.begin(); it != map.end(); it++) {
 		cout << it->first << ": " << it->second << endl;
 	}

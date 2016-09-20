@@ -145,7 +145,7 @@ string Request::URIdecode(const string &str) {
 	return URIunescape(ret);
 }
 
-stringMap Request::parseUrlEncoded(const string &encoded) {
+Request::stringMap Request::parseUrlEncoded(const string &encoded) {
 	stringMap ret;
 	vector<string> params_vec;
 	split(params_vec, encoded, is_any_of("&;"), token_compress_on);

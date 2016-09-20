@@ -15,10 +15,9 @@
 
 using namespace std;
 
-typedef map<string, string> stringMap;
-
 class Request {
 public:
+	typedef map<string, string> stringMap;
 	string method;
 	string url;
 	string path;

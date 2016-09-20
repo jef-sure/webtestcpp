@@ -9,14 +9,13 @@
 #define SRC_SERVER_H_
 
 #include <boost/asio.hpp>
-#include <boost/shared_ptr.hpp>
 #include <functional>
 #include <memory>
 
 class Server {
 
 public:
-	typedef std::function<void(boost::shared_ptr<boost::asio::ip::tcp::socket>)> handler;
+	typedef std::function<void(std::shared_ptr<boost::asio::ip::tcp::socket>)> handler;
 	Server(const boost::asio::ip::tcp::endpoint &endpoint);
 	Server() = delete;
 	Server(const Server&) = delete;
@@ -24,7 +23,7 @@ public:
 	Server& operator =(const Server&) = delete;
 	Server& operator =(Server&) = delete;
 	static boost::asio::io_service & getIoService();
-	static void acceptorRunner(handler);
+	static void acceptorStart(handler);
 };
 
 #endif /* SRC_SERVER_H_ */
