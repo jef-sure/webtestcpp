@@ -7,6 +7,7 @@
 
 #include "response.h"
 #include <map>
+#include <algorithm>
 
 struct std_response {
 	string status;
@@ -77,3 +78,18 @@ map<int, std_response> stdResponseMap = { //
 						"</html>" } }, //
 		};
 
+string Response::toString() {
+	string ret;
+	auto im =
+			find_if(stdResponseMap.begin(), stdResponseMap.end(),
+					[code] (decltype(*stdResponseMap.begin()) &p) {return p.first == code;});
+	if (im == stdResponseMap.end())
+		im = stdResponseMap.find(500);
+	ret = im->second.status;
+	for (auto &h : headers)
+		ret += h.first + ": " + h.second + "\r\n";
+	ret += "\r\n";
+	ret += im->second.body;
+	ret += body;
+	return ret;
+}

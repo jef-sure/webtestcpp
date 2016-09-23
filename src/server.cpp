@@ -6,15 +6,17 @@
  */
 
 #include "server.h"
+#include <memory>
 
 using namespace boost::asio;
 using namespace std::placeholders;
+using namespace std;
 
-static io_service io_service;
-static ip::tcp::acceptor acceptor { io_service };
+static io_service io_service_instance;
+static ip::tcp::acceptor acceptor { io_service_instance };
 
 boost::asio::io_service & getIoService() {
-	return io_service;
+	return io_service_instance;
 }
 
 Server::Server(const ip::tcp::endpoint &endpoint) {
@@ -28,7 +30,8 @@ static void acceptor_handler(const boost::system::error_code & ec,
 		Server::handler handler,
 		std::shared_ptr<ip::tcp::socket> accepted_socket) {
 	if (!ec) {
-		auto new_socket = std::make_shared<ip::tcp::socket>(&io_service);
+		auto new_socket = std::make_shared<ip::tcp::socket>(
+				&io_service_instance);
 		acceptor.async_accept(*new_socket,
 				std::bind(acceptor_handler, _1, handler, new_socket));
 		try {
@@ -40,8 +43,8 @@ static void acceptor_handler(const boost::system::error_code & ec,
 }
 
 void Server::acceptorStart(Server::handler handler) {
-	auto socket = boost::make_shared<boost::asio::ip::tcp::socket>(
-			boost::ref(io_service));
+	auto socket = make_shared<boost::asio::ip::tcp::socket>(
+			&io_service_instance);
 	acceptor.async_accept(*socket,
 			std::bind(acceptor_handler, _1, handler, socket));
 

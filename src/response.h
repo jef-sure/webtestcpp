@@ -36,12 +36,12 @@ public:
 		this->body += body;
 	}
 	void addHeader(const string &h, const string &v) {
-		addHeader (make_pair(std::forward (h), std::forward (v)));
+		headers.emplace_back(h, v);
 	}
-	private:
-		int code;
-		headersVector headers;
-		string body;
-	};
+private:
+	int code;
+	headersVector headers;
+	string body;
+};
 
 #endif /* SRC_RESPONSE_H_ */
